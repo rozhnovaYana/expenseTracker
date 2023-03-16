@@ -8,8 +8,6 @@ import { Expense } from "../../types/expenses";
 
 import { GlobalStyles } from "../../constants/styles";
 
-import { formatDate } from "../../utils/dateFormatter";
-
 interface ExpenseItem {
   item: Expense;
 }
@@ -27,7 +25,7 @@ const ExpenseItem: React.FC<ExpenseItem> = ({ item }) => {
     >
       <View>
         <Text style={[styles.text, styles.title]}>{text}</Text>
-        <Text style={styles.text}>{formatDate(date)}</Text>
+        <Text style={styles.text}>{date}</Text>
       </View>
       <View style={styles.price}>
         <Text style={styles.priceText}>{price}</Text>
