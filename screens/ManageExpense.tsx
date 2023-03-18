@@ -1,4 +1,4 @@
-import { useLayoutEffect, useContext } from "react";
+import { useLayoutEffect, useContext, useState } from "react";
 import { View, StyleSheet } from "react-native";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -10,14 +10,19 @@ import IconButton from "../components/UI/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import { ExpensesContext } from "../store/expensesContext";
 import Form from "../components/manageExpenses/Form";
+import { addExpense, updateExpanse, removeExpense } from "../utils/http";
+import Spinner from "../components/UI/Spinner";
+import Error from "../components/UI/Error";
 
-import { ExpenseInput } from "../components/manageExpenses/Form";
 type ManageExpenseScreenPrps = NativeStackScreenProps<
   StackParamList,
   "ManageExpense"
 >;
 
 const ManageExpanse = ({ navigation, route }: ManageExpenseScreenPrps) => {
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   const id = route.params?.id;
   const isEditing = !!id;
 
@@ -37,19 +42,37 @@ const ManageExpanse = ({ navigation, route }: ManageExpenseScreenPrps) => {
   }, []);
 
   const closeModal = () => navigation.goBack();
-  const confirmHandler = (expense: Expense) => {
-    closeModal();
-    if (isEditing) {
-      updateItem(id, expense);
-    } else {
-      addItem(expense);
+  const confirmHandler = async (expense: Expense) => {
+    setLoading(true);
+    try {
+      if (isEditing) {
+        await updateExpanse(id, expense);
+        updateItem(id, expense);
+      } else {
+        const id = await addExpense(expense);
+        addItem({ ...expense, id });
+      }
+      closeModal();
+    } catch (error) {
+      setError("Cannot add / update the expense");
+    } finally {
+      setLoading(false);
     }
   };
-  const deleteExpense = () => {
-    closeModal();
-    if (!id) return;
-    removeItem(id);
+  const deleteExpense = async () => {
+    try {
+      if (!id) return;
+      await removeExpense(id);
+      removeItem(id);
+      closeModal();
+    } catch (error) {
+      setError("Cannot delete item");
+    } finally {
+      setLoading(false);
+    }
   };
+  if (error && !isLoading) return <Error message={error} />;
+  if (isLoading) return <Spinner />;
   return (
     <View style={styles.wrapper}>
       <Form

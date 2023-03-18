@@ -37,6 +37,7 @@ const ModalCalendar: React.FC<IModalCalendarPickerProps> = ({
     >
       <View style={styles.modal}>
         <CalendarPicker
+          startFromMonday={true}
           onDateChange={onDateChange}
           todayBackgroundColor={"transparent"}
           selectedDayColor={GlobalStyles.colors.primary50}

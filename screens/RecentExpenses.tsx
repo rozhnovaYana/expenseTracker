@@ -1,16 +1,22 @@
 import { useContext } from "react";
 import { ExpensesContext } from "../store/expensesContext";
+import Spinner from "../components/UI/Spinner";
+import Error from "../components/UI/Error";
 
 import ExpensesOutput from "../components/expenses/ExpensesOutput";
 
 const RecentExpenses = () => {
-  const { expenses } = useContext(ExpensesContext);
+  const { expenses, state } = useContext(ExpensesContext);
+  const { isLoading, error } = state;
+
+  if (error && !isLoading) return <Error message={error} />;
+  if (isLoading) return <Spinner />;
 
   const date = new Date();
   const date7DaysAgo = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDay() - 7
+    date.getDate() - 7
   );
 
   const recentExpenses = expenses.filter((expense) => {
