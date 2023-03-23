@@ -66,7 +66,7 @@ const ManageExpanse = ({ navigation, route }: ManageExpenseScreenPrps) => {
   const deleteExpense = async () => {
     try {
       if (!id) return;
-      await removeExpense(id);
+      await removeExpense(id, token.token);
       removeItem(id);
       closeModal();
     } catch (error) {

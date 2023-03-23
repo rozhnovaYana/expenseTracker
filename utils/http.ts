@@ -31,6 +31,6 @@ export const updateExpanse = (
   return axios.put(`${BASE_URL}/expenses/${id}.json?auth=${idToken}`, expense);
 };
 
-export const removeExpense = (id: string) => {
-  return axios.delete(`${BASE_URL}/expenses/${id}.json`);
+export const removeExpense = (id: string, idToken: string) => {
+  return axios.delete(`${BASE_URL}/expenses/${id}.json?auth=${idToken}`);
 };
