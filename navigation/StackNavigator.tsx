@@ -1,39 +1,30 @@
+import { useContext } from "react";
+
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ManageExpanse from "../screens/ManageExpense";
+import AuthNavigator from "./AuthNavigator";
+import AuthorizedContent from "./AuthorizedContent";
 import { StackParamList } from "./types";
-import TabNavigator from "./BottomNavigator";
+
+import { AuthContext } from "../store/auth/authContext";
 
 import { GlobalStyles } from "../constants/styles";
 
 const { Navigator, Screen } = createNativeStackNavigator<StackParamList>();
 
 const StackNavigator = () => {
+  const { isAuthorizes } = useContext(AuthContext);
+  
   return (
     <Navigator
       screenOptions={{
-        headerStyle: {
-          backgroundColor: GlobalStyles.colors.primary700,
-        },
-        headerTintColor: GlobalStyles.colors.primary50,
-        headerTitleStyle: {
-          fontFamily: "Montserrat-SemiBold",
-        },
-        headerTitleAlign: "center",
+        headerShown: false,
         contentStyle: {
           backgroundColor: GlobalStyles.colors.primary800,
         },
       }}
     >
-      <Screen
-        name="ExpensesList"
-        component={TabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Screen
-        name="ManageExpense"
-        component={ManageExpanse}
-        options={{ presentation: "modal" }}
-      />
+      {!isAuthorizes && <Screen name="AuthScreen" component={AuthNavigator} />}
+      {isAuthorizes && <Screen name="AuthorizedContent" component={AuthorizedContent} />}
     </Navigator>
   );
 };

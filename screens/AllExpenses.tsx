@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { ExpensesContext } from "../store/expensesContext";
+import { ExpensesContext } from "../store/expenses/expensesContext";
 import ExpensesOutput from "../components/expenses/ExpensesOutput";
 import Spinner from "../components/UI/Spinner";
 import Error from "../components/UI/Error";

@@ -3,7 +3,7 @@ import { Pressable, Text, View, StyleSheet } from "react-native";
 import { CompositeScreenProps, useNavigation } from "@react-navigation/native";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { TabParamList, StackParamList } from "../../navigation/types";
+import { TabParamList, AuthorizedContent } from "../../navigation/types";
 import { Expense } from "../../types/expenses";
 
 import { GlobalStyles } from "../../constants/styles";
@@ -13,7 +13,7 @@ interface ExpenseItem {
 }
 type ExpenseItemNavigationProp = CompositeScreenProps<
   BottomTabScreenProps<TabParamList, "AllExpanses" | "RecentExpanses">,
-  NativeStackScreenProps<StackParamList>
+  NativeStackScreenProps<AuthorizedContent>
 >;
 const ExpenseItem: React.FC<ExpenseItem> = ({ item }) => {
   const { id, text, price, date } = item;
@@ -28,7 +28,7 @@ const ExpenseItem: React.FC<ExpenseItem> = ({ item }) => {
         <Text style={styles.text}>{date}</Text>
       </View>
       <View style={styles.price}>
-        <Text style={styles.priceText}>{price}</Text>
+        <Text style={styles.priceText}>${price}</Text>
       </View>
     </Pressable>
   );

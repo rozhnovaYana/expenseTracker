@@ -1,10 +1,10 @@
-import { Expense } from "../types/expenses";
+import { Expense } from "../../types/expenses";
 
 // action types
 
 export enum ExpensesActionType {
   ADD = "ADD",
-  SET = "SER",
+  SET = "SET",
   REMOVE = "REMOVE",
   UPDATE = "UPDATE",
 }

@@ -2,21 +2,23 @@ import { useLayoutEffect, useContext, useState } from "react";
 import { View, StyleSheet } from "react-native";
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { StackParamList } from "../navigation/types";
+import { AuthorizedContentList, StackParamList } from "../navigation/types";
 import { Expense } from "../types/expenses";
+import { CompositeScreenProps } from "@react-navigation/native";
 
 import IconButton from "../components/UI/IconButton";
 
 import { GlobalStyles } from "../constants/styles";
-import { ExpensesContext } from "../store/expensesContext";
+import { ExpensesContext } from "../store/expenses/expensesContext";
+import { AuthContext } from "../store/auth/authContext";
 import Form from "../components/manageExpenses/Form";
 import { addExpense, updateExpanse, removeExpense } from "../utils/http";
 import Spinner from "../components/UI/Spinner";
 import Error from "../components/UI/Error";
 
-type ManageExpenseScreenPrps = NativeStackScreenProps<
-  StackParamList,
-  "ManageExpense"
+type ManageExpenseScreenPrps = CompositeScreenProps<
+  NativeStackScreenProps<AuthorizedContentList, "ManageExpense">,
+  NativeStackScreenProps<StackParamList>
 >;
 
 const ManageExpanse = ({ navigation, route }: ManageExpenseScreenPrps) => {
@@ -25,6 +27,8 @@ const ManageExpanse = ({ navigation, route }: ManageExpenseScreenPrps) => {
 
   const id = route.params?.id;
   const isEditing = !!id;
+
+  const { token } = useContext(AuthContext);
 
   const { expenses, removeItem, addItem, updateItem } =
     useContext(ExpensesContext);
@@ -46,10 +50,10 @@ const ManageExpanse = ({ navigation, route }: ManageExpenseScreenPrps) => {
     setLoading(true);
     try {
       if (isEditing) {
-        await updateExpanse(id, expense);
+        await updateExpanse(id, expense, token.token);
         updateItem(id, expense);
       } else {
-        const id = await addExpense(expense);
+        const id = await addExpense(expense, token.token);
         addItem({ ...expense, id });
       }
       closeModal();

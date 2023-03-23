@@ -1,9 +1,16 @@
-import { createContext, useReducer, useState, useEffect } from "react";
+import {
+  createContext,
+  useReducer,
+  useState,
+  useEffect,
+  useContext,
+} from "react";
 
-import { Expense } from "../types/expenses";
+import { Expense } from "../../types/expenses";
 
 import expensesReducer, { ExpensesActionType } from "./expensesReducer";
-import { getItems } from "../utils/http";
+import { getItems } from "../../utils/http";
+import { AuthContext, AuthContextType } from "../auth/authContext";
 
 export interface ExpensesContextType {
   expenses: Expense[];
@@ -37,26 +44,30 @@ const ExpensesContextProvider: React.FC<IExpensesContextProviderProps> = ({
   const [expenses, dispatch] = useReducer(expensesReducer, []);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { token } = useContext<AuthContextType>(AuthContext);
 
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
-        const items = await getItems();
-        dispatch({
-          type: ExpensesActionType.SET,
-          payload: {
-            items,
-          },
-        });
+        if (token.token !== "") {
+          const items = await getItems(token.token);
+          dispatch({
+            type: ExpensesActionType.SET,
+            payload: {
+              items,
+            },
+          });
+        }
       } catch (error) {
+        console.log(error);
         setError("Cannot fetch data");
       } finally {
         setLoading(false);
       }
     };
     getData();
-  }, []);
+  }, [token]);
 
   const addItem = (item: Expense) => {
     dispatch({

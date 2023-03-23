@@ -7,9 +7,12 @@ import { TabParamList } from "./types";
 import { GlobalStyles } from "../constants/styles";
 import IconButton from "../components/UI/IconButton";
 
+import { useContext } from "react";
+import { AuthContext, AuthContextType } from "../store/auth/authContext";
 const { Navigator, Screen } = createBottomTabNavigator<TabParamList>();
 
 const TabNavigator = () => {
+  const { signOut } = useContext<AuthContextType>(AuthContext);
   return (
     <Navigator
       screenOptions={({ navigation }) => ({
@@ -36,6 +39,14 @@ const TabNavigator = () => {
             color={tintColor}
             size={24}
             onPress={() => navigation.navigate("ManageExpense")}
+          />
+        ),
+        headerLeft: ({ tintColor }) => (
+          <IconButton
+            icon="log-out"
+            color={tintColor}
+            size={24}
+            onPress={signOut}
           />
         ),
       })}

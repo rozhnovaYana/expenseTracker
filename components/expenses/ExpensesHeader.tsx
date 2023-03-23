@@ -19,7 +19,7 @@ const ExpensesHeader: React.FC<IExpensesHeaderProps> = ({
   return (
     <View style={styles.wrapper}>
       <Text style={styles.periodText}>{period}</Text>
-      <Text style={styles.priceText}>{totalPrice.toFixed(2)}</Text>
+      <Text style={styles.priceText}>${totalPrice.toFixed(2)}</Text>
     </View>
   );
 };
