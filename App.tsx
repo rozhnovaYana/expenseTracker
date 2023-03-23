@@ -15,7 +15,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   const [token, setToken] = useState({
     initialtoken: "",
-    initialexpiresIn: "0",
+    initialexpiresIn: "",
     isLoading: true,
   });
 
